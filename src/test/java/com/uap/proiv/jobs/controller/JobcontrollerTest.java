@@ -1,34 +1,37 @@
 package com.uap.proiv.jobs.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.uap.proiv.jobs.dto.User;
-import com.uap.proiv.jobs.dto.UserApiResponse;
 import com.uap.proiv.jobs.service.JobService;
 import com.uap.proiv.jobs.service.UserJobAssignedService;
 import com.uap.proiv.jobs.service.UserService;
 
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
+import com.uap.proiv.jobs.dto.UserApiResponse;
+
+import com.uap.proiv.jobs.dto.User;
+
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 
-import static org.mockito.Mockito.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-//No es buena practica usar * pero para este caso es aceptable ya que se estan usando varias aserciones de JUnit 5 
+
+import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 
 @ExtendWith(MockitoExtension.class)
-public class JobcontrollerTest {
-    
+
+public class JobControllerTest{
+
     @Mock
     UserService userService;
 
@@ -41,16 +44,18 @@ public class JobcontrollerTest {
     @InjectMocks
     JobController jobController;
 
-    private MockMvc mockMvc;
+    private MockMvc mockMvc;    
 
     private UserApiResponse userApiResponse;
     private List<User> users;
+    
 
     @BeforeEach
     void setup() {
+        
         mockMvc = MockMvcBuilders.standaloneSetup(jobController).build();
+                
 
-        users = new ArrayList<>();
 
         users = new ArrayList<>();
         User user1 = new User();
@@ -69,26 +74,26 @@ public class JobcontrollerTest {
         user2.setLastName("perez");
         users.add(user2);
 
+        
+
+
         userApiResponse = new UserApiResponse();
         userApiResponse.setPage(1);
-        userApiResponse.setPerPage(6);
-        userApiResponse.setTotal(12);
-        userApiResponse.setTotalPages(2);
+        userApiResponse.setPerPage(2);
+        userApiResponse.setTotal(2);
+        userApiResponse.setTotalPages(1);
         userApiResponse.setData(users);
+
     }
 
-    @Test
-    @DisplayName("GET /api/job/users/{page} retorna usuarios")
-    void getUsers_success() throws Exception {
+        @Test 
+        @DisplayName("GET api /api/job/users/{page} retorna usuarios")
+
+        void getUsers_success() throws Exception {
         when(userService.search(1)).thenReturn(userApiResponse);
 
-        mockMvc.perform(get("/api/job/users/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.data").isArray());
-                
-
-    }
+        mockMvc.perform(get("/api/job/users/1")).andExpect((status().isOk()))
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.data").isArray());
+        }
 }
-
-
