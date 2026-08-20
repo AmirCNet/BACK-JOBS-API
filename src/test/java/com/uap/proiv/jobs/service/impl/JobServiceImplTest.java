@@ -5,12 +5,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-
-import org.junit.Test;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.mockito.*;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.times;
@@ -19,6 +16,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.uap.proiv.jobs.client.*;
 import com.uap.proiv.jobs.dto.Job;
@@ -76,5 +74,13 @@ public class JobServiceImplTest {
 
         verify(jobApiRepository, times(1)).getAllJobs();
     }
+
+     @Test
+     @DisplayName("Verifica una exception en jobApiRepository por listado vacio")
+     void getAllJob_Exception(){
+        when(jobApiRepository.getAllJobs()).thenReturn(new ArrayList<>());
+        assertThrows(NoSuchElementException.class, () -> {jobServiceImpl.getJobById(1);});
+        verify(jobApiRepository,times(1)).getAllJobs();
+    } 
 
 }
