@@ -19,7 +19,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserApiResponse search(int page) {
-        return userApiRepository.getUsers(page);
+        UserApiResponse userApiResponse = userApiRepository.getUsers(page);
+        int id = 1;
+       for (User user:userApiResponse.getData()){
+            user.setJobId(id);
+            id++;
+        };
+        return userApiResponse;
     }
 
     @Override
