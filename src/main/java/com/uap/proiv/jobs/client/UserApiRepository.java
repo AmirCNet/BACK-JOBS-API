@@ -4,6 +4,7 @@ import com.uap.proiv.jobs.dto.User;
 import com.uap.proiv.jobs.dto.UserApiResponse;
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.uap.proiv.jobs.dto.UserRequest;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -114,6 +115,39 @@ public class UserApiRepository {
             }
         } catch (Exception e) {
             throw new RuntimeException("Error al conectar con la API de usuarios: " + e.getMessage(), e);
+        }
+    }
+
+    public User createUser(UserRequest userRequest) {
+        try {
+            Map<String, String> userMap = new HashMap<>();
+            userMap.put("name", userRequest.getFirstName());
+            userMap.put("job", userRequest.getLastName());
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(baseUrl))
+                    .header("Accept", "application/json")
+                    .header("X-API-KEY", apiKey)
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(userMap)))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(
+                    request,
+                    HttpResponse.BodyHandlers.ofString()
+            );
+
+            if (response.statusCode() != 201) {
+                throw new RuntimeException("Error en ReqRes API. Código: " + response.statusCode());
+            }
+
+            User user = objectMapper.readValue(response.body(), User.class);
+            user.setFirstName(userRequest.getFirstName());
+            user.setLastName(userRequest.getLastName());
+            user.setEmail(userRequest.getEmail());
+            return user;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al crear el usuario en la API: " + e.getMessage(), e);
         }
     }
 
