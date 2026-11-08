@@ -1,3 +1,9 @@
 spring:
   application:
     name: jobs
+  graphql:
+    graphiql:
+      # Activa o desactiva la interfaz grafica
+      enabled: true
+      # Ruta de la interfaz grafica
+      path: /graphiql

@@ -13,6 +13,7 @@ public class User {
     @JsonProperty("last_name")
     private String lastName;
     private String avatar;
+    private int jobId;
 
     public int getId() {
         return id;
@@ -54,6 +55,14 @@ public class User {
         this.avatar = avatar;
     }
 
+    public int getJobId() {
+        return jobId;
+    }
+
+    public void setJobId(int jobId) {
+        this.jobId = jobId;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -62,4 +71,3 @@ public class User {
                 '}';
     }
 }
-
